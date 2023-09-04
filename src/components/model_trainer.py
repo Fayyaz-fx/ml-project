@@ -40,6 +40,7 @@ class ModelTrainer:
                 test_array[:, :-1],
                 test_array[:,-1]
                 )
+            
             models = {
                 "Random Forest" : RandomForestRegressor(),
                 "Decision Tree" : DecisionTreeRegressor(),
@@ -50,8 +51,37 @@ class ModelTrainer:
                 "CatBoosting Classifier" : CatBoostRegressor(verbose = False),
                 "AdaBoost Classifier" : AdaBoostRegressor(),
             }
+            params ={
+                "Decision Tree":{
+                    'criterion': ['squared_erro', 'friedman_mse', 'absoulte_error', 'poisson' ],
+                    # 'splitter':['best', 'random']
+                    # 'max_features':['sqrt', 'log2']
+                }, 
+                "Random Forest": {
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Gradient Boosting" : {
+                    'learning_rate': [.1, .01, .05, .001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Linear Regression": {},
+                "XGBRegressor": {
+                    'learning_rate': [.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256],
+                },
+                'CatBoosting Regressor':{
+                    'depth' : [6,8,10],
+                    'learning_rate': [0.01,0.05,0.1],
+                    'iterations' : [30,50,100]
+                },
+                "AdaBoost Regressor" :{
+                    'learning_rate': [.1,.01,0.5,0.001],
 
-            model_report:dict = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models)
+                    "n_estimators": [8,16,32,64,128,256]
+                }
+            }
+
+            model_report:dict = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models, param=params)
 
             best_model_score = max(sorted(model_report.values()))
 
